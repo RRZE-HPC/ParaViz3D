@@ -12,8 +12,8 @@ pip install otf2
 https://www.blender.org/download/
 
 
-## I. Trace converter script
-### 1. (Optional) Run the following command from ParaViz3D's root folder:
+## I. (Optional) Trace converter script
+### 1. Run the following command from ParaViz3D's root folder:
 ### This step is optional because it was already performed
 ### For the Cube case:
 python trace_converter.py --root_folder="./traces/cube/cube864_2184362/"
@@ -26,7 +26,8 @@ python trace_converter.py --root_folder="./traces/sphere/sphere720_2205999/"
 # II. Blender plotter script, to generate the trace's 3D scene
 
 ### 1. Update the following absolute path to the ParaViz3D folder in the Blender files beginning:
-path_to_ParaViz3D = 'D:/ParaViz/'
+### Example:
+path_to_ParaViz3D = 'D:/ParaViz3D/'
 ### 2. Then open Blender, go to the the Scripting tab, and open this file there.
 ### 3. Press the Play button (next to the file name)
 ### 4. Select the Layout tab to see the result
