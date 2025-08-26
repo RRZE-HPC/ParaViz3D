@@ -3,7 +3,7 @@
 
 ### INSTRUCTIONS:
 # 1. Please update the following absolute path to the ParaViz3D folder:
-path_to_ParaViz3D = 'D:/ParaViz/'
+path_to_ParaViz3D = '/media/playerone/0851-0ECE/ParaViz/'
 # 2. Then open Blender, go to the the Scripting tab, and open this file there.
 # 3. Press the Play button (next to the file name)
 # 4. Select the Layout tab to see the result

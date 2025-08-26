@@ -3,7 +3,7 @@
 
 ### INSTRUCTIONS:
 # 1. Please update the following absolute path to the ParaViz3D folder:
-path_to_ParaViz3D = 'D:/ParaViz/'
+path_to_ParaViz3D = '/media/playerone/0851-0ECE/ParaViz/'
 # 2. Then open Blender, go to the the Scripting tab, and open this file there.
 # 3. Press the Play button (next to the file name)
 # 4. Select the Layout tab to see the result
@@ -224,12 +224,12 @@ def generate_torus(R=0.55, r=0.5, n_major=24, n_minor=24):
 #cuboid - cube with irregular sides
 def cuboid(x_nb_points=12, y_nb_points=12, z_nb_points=6, spacing_x=1, spacing_y=1, spacing_z=1):
     coordinates = []
-    for k in range(z_nb_points):
-        for j in range(y_nb_points):
-            for i in range(x_nb_points):
-                x = spacing_x * (i - 0.5 * (x_nb_points-1))
-                y = spacing_y * (j - 0.5 * (y_nb_points-1))
-                z = spacing_z * (k - 0.5 * (z_nb_points-1)) + 1
+    for k in range(y_nb_points):
+        for j in range(x_nb_points):
+            for i in range(z_nb_points):
+                x = spacing_x * (j - 0.5 * (x_nb_points-1))
+                y = spacing_y * (k - 0.5 * (y_nb_points-1))
+                z = spacing_z * (i - 0.5 * (z_nb_points-1)) + 1
                 coordinates.append((x, y, z))
 
     return coordinates
@@ -503,9 +503,9 @@ def inside_points(vAB,vAC):
 #                          SCENE MANAGEMENT FUNCTIONS                          #
 ################################################################################
 
-filename = path_to_ParaViz3D + 'traces/sphere/sphere720_2205999/extract/CompStopAndStart.txt'
-timeJumpList_file = path_to_ParaViz3D + 'traces/sphere/sphere720_2205999/extract/TimeJumpList.txt'
-ranks_file = path_to_ParaViz3D + 'traces/sphere/sphere720_2205999/extract/Ranks.txt'
+filename = path_to_ParaViz3D + 'traces/cube/cube864_2184362/extract/CompStopAndStart.txt'
+timeJumpList_file = path_to_ParaViz3D + 'traces/cube/cube864_2184362/extract/TimeJumpList.txt'
+ranks_file = path_to_ParaViz3D + 'traces/cube/cube864_2184362/extract/Ranks.txt'
 
 
 timejumps = []
