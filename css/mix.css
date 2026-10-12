@@ -1,0 +1,904 @@
+/* 
+INTERFACE-WRAPPER 
+*/
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: monospace;
+  background: #000000;
+  /* Exactly the viewport, never more: the settings panel is taller than the screen, and with
+     an auto height the body grew to fit it, so scrolling the panel scrolled the 3D scene too.
+     The panel scrolls inside itself instead (see .interface). */
+  height: 100vh;
+  overflow: hidden;
+  padding: 20px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: white;
+  display: flex;
+}
+
+.interface {
+  flex: 1;
+  position: relative;
+  transition: flex 0.3s ease, width 0.3s ease, padding 0.3s ease, opacity 0.3s ease;
+  /* Its own scroll container. `overflow: hidden` here used to clip nothing, because the
+     element was as tall as its content; what actually moved was the page. */
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* Keep the wheel inside the panel once it hits an end, rather than handing the scroll on. */
+  overscroll-behavior: contain;
+}
+
+.interface.collapsed {
+  flex: 0 0 0px;
+  padding: 0;
+  opacity: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.interface.collapsed .container {
+  display: none;
+}
+
+.interface-toggle {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 1000;
+  background: rgba(30, 30, 30, 0.9);
+  color: white;
+  border: 1px solid #555;
+  border-radius: 5px;
+  width: 36px;
+  height: 36px;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.interface-toggle:hover {
+  background: rgba(60, 60, 60, 0.9);
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: rgba(20, 20, 20, 0.95);
+  border-radius: 10px;
+  box-shadow: 0 0 30px rgba(0, 123, 255, 0.3);
+  padding: 30px;
+  border: 1px solid #444;
+}
+
+.header {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #444;
+}
+
+.python-link {
+  display: inline-block;
+  padding: 12px 24px;
+  background: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: all 0.3s;
+  margin-bottom: 20px;
+  font-weight: normal;
+  font-size: 14px;
+  border: 1px solid #0056b3;
+}
+
+.python-link:hover {
+  background: #0056b3;
+}
+
+.data-source {
+  background: rgba(30, 30, 30, 0.9);
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #444;
+}
+
+.data-source h3 {
+  margin-bottom: 15px;
+  color: #ccc;
+  font-weight: normal;
+  font-size: 16px;
+}
+
+.radio-group {
+  margin-bottom: 15px;
+}
+
+.radio-group label {
+  display: block;
+  margin-bottom: 10px;
+  cursor: pointer;
+  color: white;
+  transition: color 0.3s;
+  font-size: 14px;
+}
+
+.radio-group label:hover {
+  color: #aaa;
+}
+
+.radio-group input[type="radio"] {
+  margin-right: 10px;
+}
+
+.file-input-group {
+  margin-top: 10px;
+}
+
+.file-input-group input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #555;
+  border-radius: 5px;
+  background: #222;
+  color: white;
+  cursor: pointer;
+  font-family: monospace;
+}
+
+.section {
+  margin-bottom: 30px;
+  padding: 24px;
+  background: rgba(30, 30, 30, 0.9);
+  border-radius: 10px;
+  border: 1px solid #444;
+}
+
+.section h2 {
+  color: white;
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: normal;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: normal;
+  color: #ccc;
+  font-size: 14px;
+}
+
+.form-group select,
+.form-group input[type="number"],
+.form-group input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #555;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: all 0.3s;
+  background: #222;
+  color: white;
+  font-family: monospace;
+}
+
+.form-group select:focus,
+.form-group input[type="number"]:focus,
+.form-group input[type="text"]:focus {
+  outline: none;
+  border-color: #007bff;
+  background: #2a2a2a;
+}
+
+.form-group select option {
+  background: #222;
+  color: white;
+}
+
+.pickr-form-item {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 6px;
+}
+
+.pickr-form-item label {
+  font-size: 12px;
+  color: #ccc;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.axis-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.axis-item {
+  background: #222;
+  padding: 15px;
+  border-radius: 5px;
+  border: 1px solid #555;
+  min-width: 0;
+}
+
+.axis-item label {
+  display: block;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 8px;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.axis-item input,
+.axis-item select {
+  width: 100%;
+}
+
+.dim-axis-group.two-col {
+  grid-template-columns: 1fr 1fr !important;
+}
+
+.slider-with-number {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.slider-with-number input[type="range"] {
+  flex: 1;
+}
+
+.slider-with-number input[type="number"] {
+  width: 70px;
+  flex: none;
+  padding: 6px;
+  border: 1px solid #555;
+  border-radius: 5px;
+  background: #222;
+  color: #fff;
+  font-size: 14px;
+}
+
+.hidden {
+  display: none;
+}
+
+.custom-geometry-upload {
+  margin-top: 15px;
+  padding: 15px;
+  background: #222;
+  border-radius: 5px;
+  border: 1px solid #555;
+}
+
+.checkbox-group {
+  margin: 15px 0;
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: normal;
+  color: white;
+  transition: color 0.3s;
+  font-size: 14px;
+}
+
+.checkbox-group label:hover {
+  color: #aaa;
+}
+
+.checkbox-group input[type="checkbox"] {
+  margin-right: 10px;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.machine-topology-fields {
+  background: #222;
+  padding: 15px;
+  border-radius: 5px;
+  margin-top: 15px;
+  border: 1px solid #555;
+}
+
+.advanced-button {
+  background: #007bff;
+  color: white;
+  border: 1px solid #0056b3;
+  padding: 12px 24px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: all 0.3s;
+  font-weight: normal;
+  font-family: monospace;
+  font-size: 14px;
+}
+
+.advanced-button:hover {
+  background: #0056b3;
+}
+
+.projection-fields {
+  background: #222;
+  padding: 15px;
+  border-radius: 5px;
+  margin-top: 15px;
+  border: 1px solid #555;
+}
+
+.projection-item {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 10px;
+  padding: 12px;
+  background: #2a2a2a;
+  border-radius: 5px;
+  border: 1px solid #444;
+}
+
+.dual-view-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 15px;
+}
+
+.metric-panel {
+  background: #222;
+  padding: 15px;
+  border-radius: 5px;
+  border: 1px solid #555;
+}
+
+.rgba-input {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.rgba-input input {
+  padding: 8px;
+  border: 1px solid #555;
+  border-radius: 5px;
+  background: #222;
+  color: white;
+  transition: all 0.3s;
+  font-family: monospace;
+  font-size: 14px;
+}
+
+.rgba-input input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.color-inputs {
+  margin-top: 15px;
+}
+
+.color-input-item {
+  margin-bottom: 15px;
+  padding: 12px;
+  background: #2a2a2a;
+  border-radius: 5px;
+  border: 1px solid #444;
+}
+
+.color-input-item label {
+  color: #888;
+  font-size: 12px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.hover-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.hover-options label {
+  color: white;
+  font-weight: normal;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.hover-options label:hover {
+  color: #aaa;
+}
+
+.hover-options input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+.time-boundaries {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.boundary-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #222;
+  padding: 12px;
+  border-radius: 5px;
+  border: 1px solid #555;
+}
+
+.boundary-item label {
+  color: #ccc;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.boundary-item input[type="number"] {
+  flex: 1;
+  background: #2a2a2a;
+  border: 1px solid #555;
+  color: white;
+}
+
+.boundary-item input[type="checkbox"] {
+  margin: 0;
+}
+
+.number-spinner {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.spinner-btn {
+  background: #007bff;
+  color: white;
+  border: 1px solid #0056b3;
+  width: 32px;
+  height: 32px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.3s;
+  font-family: monospace;
+}
+
+.spinner-btn:hover {
+  background: #0056b3;
+}
+
+.spinner-btn:active {
+  transform: scale(0.95);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #222;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #666;
+}
+
+/* Input number spinner buttons */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  opacity: 1;
+}
+
+/* Tooltip styles */
+.tooltip-icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background: #555;
+  color: white;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 16px;
+  font-size: 12px;
+  margin-left: 5px;
+  cursor: help;
+  position: relative;
+}
+
+.tooltip-icon:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 20px;
+  top: -5px;
+  background: rgba(40, 40, 40, 0.95);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 5px;
+  border: 1px solid #666;
+  white-space: nowrap;
+  z-index: 1000;
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.label-with-tooltip {
+  display: flex;
+  align-items: center;
+}
+
+.cutoff-item {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding: 10px;
+  background: #2a2a2a;
+  border-radius: 5px;
+}
+
+
+
+/* 
+VIZUALIZATION-WRAPPER 
+*/
+
+.viz-wrapper {
+  position: relative;
+  width: 100%;
+  /* The body's own content box, which is 100vh minus its padding. At 100vh the scene hung
+     40px past the bottom of the window and the page scrolled even with the panel closed. */
+  height: 100%;
+  overflow: hidden;
+  background-color: #000;
+  color: white;
+  flex: 1;
+}
+
+.renderer-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.ui-panel {
+  position: absolute;
+  padding: 10px;
+  background: rgba(20, 20, 20, 0.8);
+  border-radius: 5px;
+  font-size: 16px;
+  z-index: 10;
+}
+
+#info-panel {
+  top: 10px;
+  left: 10px;
+  max-width: 300px;
+}
+
+#legend-panel-left {
+  top: 60px;
+  left: 10px;
+  max-width: 260px;
+}
+
+#legend-panel-right {
+  top: 60px;
+  right: 10px;
+  max-width: 260px;
+}
+
+.legend-panel {
+  font-size: 13px;
+}
+
+.legend-title {
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.legend-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0;
+}
+
+.legend-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  flex: 0 0 auto;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+#controls-panel {
+  bottom: 10px;
+  width: calc(100% - 40px);
+  left: 10px;
+}
+
+#uploader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(30, 30, 30, 0.9);
+  padding: 25px;
+  border-radius: 10px;
+  border: 1px solid #444;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  z-index: 10;
+}
+
+.file-input-label {
+  cursor: pointer;
+  background: #333;
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: 1px solid #555;
+  display: inline-block;
+}
+
+.file-input-label:hover {
+  background: #444;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.dim-group {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.dim-group>span {
+  color: #888;
+}
+
+.input-label {
+  font-size: 14px;
+  color: #ccc;
+}
+
+.text-input {
+  background: #222;
+  color: white;
+  border: 1px solid #555;
+  border-radius: 5px;
+  padding: 8px;
+  font-family: monospace;
+  font-size: 16px;
+  width: 80px;
+  text-align: center;
+}
+
+input[type='file'] {
+  display: none;
+}
+
+#visualize-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#visualize-btn:hover {
+  background: #0056b3;
+}
+
+#visualize-btn:disabled {
+  background: #555;
+  cursor: not-allowed;
+}
+
+#timeline-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+#play-pause, #prev-frame, #next-frame {
+  padding: 8px 12px;
+  cursor: pointer;
+  background: #333;
+  border: 1px solid #555;
+  border-radius: 5px;
+  color: white;
+}
+
+#prev-frame, #next-frame {
+  padding: 8px 10px;
+}
+
+#slider {
+  width: 100%;
+}
+
+#timeline-time-display {
+  font-family: monospace;
+  font-size: 12px;
+  color: #ccc;
+  white-space: nowrap;
+  flex: none;
+}
+
+#record-btn {
+  padding: 8px 12px;
+  cursor: pointer;
+  background: #333;
+  border: 1px solid #555;
+  border-radius: 5px;
+  color: white;
+  white-space: nowrap;
+}
+
+#record-btn.recording-active {
+  background: #c0392b;
+  border-color: #e74c3c;
+}
+
+/* Only visible while a region is selected on the timeline — tinted to match the selection
+   flags drawn on the HUD, so the two read as the same thing. */
+#clear-selection {
+  padding: 8px 12px;
+  cursor: pointer;
+  background: #1d3a57;
+  border: 1px solid #4aa3ff;
+  border-radius: 5px;
+  color: #cfe6ff;
+  white-space: nowrap;
+  font-family: monospace;
+}
+
+#clear-selection:hover {
+  background: #27506f;
+}
+
+#recording-indicator {
+  color: #ff4d4d;
+  font-weight: bold;
+  font-family: monospace;
+  animation: blink 1s step-start infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+.filename {
+  font-style: italic;
+  color: #aaa;
+  font-size: 12px;
+  height: 14px;
+  margin-top: 5px;
+}
+
+.error-message {
+  color: #ff6b6b;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* @import "https://cdn.jsdelivr.net/npm/pickr-widget/dist/pickr.min.css";
+        @import '@simonwep/pickr/dist/themes/nano.min.css';
+*/
+
+
+/* 
+VAMPIR-TIMELINE 
+*/
+
+vampir-timeline {
+  background-color: #1a1a2e;
+  font-family: monospace;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+h1 {
+  color: #eee;
+  margin-bottom: 20px;
+}
+
+#canvas-container {
+  border: 2px solid #444;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+#controls {
+  margin-top: 20px;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+button {
+  padding: 10px 20px;
+  font-family: monospace;
+  font-size: 14px;
+  cursor: pointer;
+  background: #333;
+  color: white;
+  border: 1px solid #555;
+  border-radius: 5px;
+  transition: background 0.2s;
+}
+
+button:hover {
+  background: #444;
+}
+
+#timeline-slider {
+  width: 300px;
+}
+
+.info {
+  color: #888;
+  margin-top: 15px;
+  font-size: 12px;
+}
